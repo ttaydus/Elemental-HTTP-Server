@@ -1,13 +1,17 @@
 const http = require('http');
 const fs = require('fs');
+//console.log('fs',fs)
 
 // console.log('url', url);
 //const indexRoute = require('./public/index');
 
 const server = http.createServer(function(req,res){
-    const { url } = req;
+    const { headers, url, method } = req;
+    const userAgent = headers['user-agent'];
     // console.log(url);
-    
+
+if(req.method === 'GET'){
+   
     if(url === '/css/styles.css'){
         fs.readFile('./public/css/styles.css', (err, data) => {
             if(err) throw err;
@@ -18,7 +22,7 @@ const server = http.createServer(function(req,res){
     else if(url === '/'){
         fs.readFile('./public/index.html', (err, data) => {
             if (err) throw err;
-            console.log(data.toString());
+            //console.log(data.toString());
             res.write(data.toString());
             //console.log('data', data.toString().split(' ')[0]);
             // let method = ('data:', data.toString().split(' ')[0]);
@@ -48,8 +52,37 @@ const server = http.createServer(function(req,res){
         });
     }
 
-});
+}
 
+else if(req.method === 'POST'){
+    //console.log(req.url);
+    let body = [];
+    req.on('error', (err) => {
+       console.log(err);
+    }).on('data', (chunk) => {
+        body.push(chunk);
+        console.log('chunk',chunk)
+       
+       
+    }).on('end', () => {
+        body = Buffer.concat(body).toString();
+        console.log('body', body);
+        res.on('error', (err) => {
+            console.log(err);
+        })
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        const responseBody = {headers, method, url, body};
+
+        res.write('hearing');
+
+        //res.write(JSON.stringify(responseBody));
+        res.end();
+    })
+}
+});
 
 server.listen(8080, () => {
     console.log(`Server Running`);
