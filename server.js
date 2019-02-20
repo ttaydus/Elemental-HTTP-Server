@@ -1,10 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const { parse } = require('querystring');
-//console.log('fs',fs)
 
-// console.log('url', url);
-//const indexRoute = require('./public/index');
 
 const server = http.createServer(function(req,res){
     const { headers, url, method } = req;
