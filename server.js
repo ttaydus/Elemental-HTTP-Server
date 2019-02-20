@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const { parse } = require('querystring');
 //console.log('fs',fs)
 
 // console.log('url', url);
@@ -58,15 +59,17 @@ else if(req.method === 'POST'){
     //console.log(req.url);
     let body = [];
     req.on('error', (err) => {
-       console.log(err);
+       console.log('err:', err);
     }).on('data', (chunk) => {
         body.push(chunk);
-        console.log('chunk',chunk)
+        console.log('chunk:',chunk)
        
        
     }).on('end', () => {
         body = Buffer.concat(body).toString();
-        console.log('body', body);
+        console.log('body:', body);
+        console.log('parsed:', parse(body));
+
         res.on('error', (err) => {
             console.log(err);
         })
@@ -87,3 +90,14 @@ else if(req.method === 'POST'){
 server.listen(8080, () => {
     console.log(`Server Running`);
 });
+
+var f = 'sometextfile.txt';
+
+writeTextFile(f, 'spoon');
+writeTextFile(f, 'cheese monkey')
+
+function writeTextFile(afilename, output){
+    var txtFile = new File (afilename);
+    txtFile.writeln(output);
+    txtFile.close();
+}
