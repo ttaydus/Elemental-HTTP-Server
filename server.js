@@ -91,13 +91,3 @@ server.listen(8080, () => {
     console.log(`Server Running`);
 });
 
-var f = 'sometextfile.txt';
-
-writeTextFile(f, 'spoon');
-writeTextFile(f, 'cheese monkey')
-
-function writeTextFile(afilename, output){
-    var txtFile = new File (afilename);
-    txtFile.writeln(output);
-    txtFile.close();
-}
