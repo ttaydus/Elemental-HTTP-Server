@@ -1,6 +1,6 @@
 const http = require('http');
 const fs = require('fs');
-const { parse } = require('querystring');
+const querystring = require('querystring');
 
 
 const server = http.createServer(function(req,res){
@@ -39,6 +39,15 @@ if(req.method === 'GET'){
         fs.readFile('./public/hydrogen.html', (err, data) => {
             if (err) throw err;
             res.write(data.toString());
+            //console.log('DATATA:', data.toString());
+            res.end();
+            
+        });
+    }
+    else if(url === '/elements.html'){
+        fs.readFile('./public/elements.html', (err, data) => {
+            if (err) throw err;
+            res.write(data.toString());
             res.end();
         });
     }
@@ -65,8 +74,33 @@ else if(req.method === 'POST'){
     }).on('end', () => {
         body = Buffer.concat(body).toString();
         console.log('body:', body);
-        console.log('parsed:', parse(body));
+        console.log('parsed:', querystring.parse(body));
+        const obj = querystring.parse(body);
 
+        const data =          
+        
+        ` <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <title>The Elements - Boron</title>
+        <link rel="stylesheet" href="/css/styles.css">
+        </head>
+        <body>
+        <h1>${obj.elementName}</h1>
+        <h2>${obj.elementSymbol}</h2>
+        <h3>${obj.elementAtomicNumber}</h3>
+        <p>${obj.elementDescription}</p>
+        <p><a href="/">back</a></p>
+        </body>
+        </html> `
+    ;
+
+        fs.writeFile('./public/elements.html', data, function(err, data) {
+            if(err) console.log(err);
+            console.log('Successfully Written to File.')
+        });
+        
         res.on('error', (err) => {
             console.log(err);
         })
@@ -76,7 +110,7 @@ else if(req.method === 'POST'){
 
         const responseBody = {headers, method, url, body};
 
-        res.write('hearing');
+        res.write(data);
 
         //res.write(JSON.stringify(responseBody));
         res.end();
