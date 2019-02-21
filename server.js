@@ -44,13 +44,13 @@ if(req.method === 'GET'){
             
         });
     }
-    else if(url === '/elements.html'){
-        fs.readFile('./public/elements.html', (err, data) => {
-            if (err) throw err;
-            res.write(data.toString());
-            res.end();
-        });
-    }
+    // else if(url === '/elements.html'){
+    //     fs.readFile('./public/elements.html', (err, data) => {
+    //         if (err) throw err;
+    //         res.write(data.toString());
+    //         res.end();
+    //     });
+    // }
     else{
         fs.readFile('./public/404.html', (err, data) => {
             if (err) throw err;
@@ -96,10 +96,21 @@ else if(req.method === 'POST'){
         </html> `
     ;
 
+        // const getElemList = document.getElementById('elementsList');
+        // console.log(document)
+
         fs.writeFile('./public/elements.html', data, function(err, data) {
             if(err) console.log(err);
             console.log('Successfully Written to File.')
         });
+
+        if(url === '/elements.html'){
+            fs.readFile('./public/elements.html', (err, data) => {
+                if (err) throw err;
+                res.write(data.toString());
+                res.end();
+            });
+        }
         
         res.on('error', (err) => {
             console.log(err);
